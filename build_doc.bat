@@ -1,0 +1,2 @@
+cd .\documentation
+make html
