@@ -20,7 +20,7 @@ VERSION = "0.6.2"
 
 if __name__ == "__main__":
 	setup(
-		name="AccessData SDK",
+		name="accessdata-sdk",
 		version=VERSION,
 		description="Python Library for AccessData's API",
 		author="Thomas Vieth",
