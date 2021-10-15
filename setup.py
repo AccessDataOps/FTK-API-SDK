@@ -25,7 +25,7 @@ if __name__ == "__main__":
 		description="Python Library for AccessData's API",
 		author="Thomas Vieth",
 		author_email="thomas.vieth@exterro.com",
-		url="http://www.accessdata.com/",
+		url="https://github.com/AccessDataOps/FTK-API-SDK",
 		packages=[
 			"accessdata",
 			"accessdata.api"
