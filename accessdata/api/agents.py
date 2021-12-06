@@ -9,7 +9,8 @@ from enum import IntEnum
 from typing import Any
 
 from .extensions import (agent_volatile_analysis_ext, agent_software_inventory_ext,
-    agent_memory_acquisition_ext, agent_disk_acquisition_ext, agent_remediation_ext)
+    agent_memory_acquisition_ext, agent_disk_acquisition_ext, agent_remediation_ext,
+    agent_collection_ext)
 from .jobs import Job
 from ..logging import logger
 from ..utilities import AttributeFinderMixin
@@ -108,6 +109,16 @@ class Agent:
             **kwargs
         )
 
+    def collect(self, **kwargs):
+        """Runs a collection task on the endpoint. Any keyword arguments
+        supplied are directly overriden in the filter of the request.
+        """
+        return _collect_on_agent(
+            self._case,
+            [self.target, ],
+            **kwargs
+        )
+
 ##
 
 class Agents(AttributeFinderMixin):
@@ -192,6 +203,16 @@ class Agents(AttributeFinderMixin):
         supplied are directly overriden in the body of the request.
         """
         return _remediate(
+            self._case,
+            list(map(lambda agent: agent.target, self)),
+            **kwargs
+        )
+
+    def collect(self, **kwargs):
+        """Runs a collection task on the endpoint. Any keyword arguments
+        supplied are directly overriden in the filter of the request.
+        """
+        return _collect_on_agent(
             self._case,
             list(map(lambda agent: agent.target, self)),
             **kwargs
@@ -294,6 +315,26 @@ def _remediate(case, targets: list[str], task: dict = {}):
         ext.format(caseid=caseid),
         json={
             "agentRemediation": task,
+            "ips": {
+                "targets": targets
+            }
+        }
+    )
+    return Job(case, id=response.json())
+
+def _collect_on_agent(case, targets: list[str], name: str, **kwargs):
+    caseid = case.get("id", 0)
+    request_type, ext = agent_collection_ext
+    response = case.client.send_request(request_type,
+        ext.format(caseid=caseid),
+        json={
+            "collectionOnAgent": {
+                "filter": kwargs,
+                "baseName": name,
+                "calculateSha1Hashes": True,
+                "calculateMD5Hashes": True,
+                "verifyAfterCreation": True,
+            },
             "ips": {
                 "targets": targets
             }
