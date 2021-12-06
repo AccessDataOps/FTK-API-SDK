@@ -6,6 +6,7 @@
 
 from logging import basicConfig, getLogger, DEBUG
 from pathlib import Path
+from os import getlogin
 
 ##
 
@@ -21,7 +22,7 @@ logfile = Path(LOG_PATH)
 logfile.parent.mkdir(parents=True, exist_ok=True)
 logfile.touch(exist_ok=True)
 
-basicConfig(filename=logfile, format='%(asctime)s - %(levelname)s:%(message)s')
+basicConfig(filename=logfile, format=getlogin() + ' - %(asctime)s - %(levelname)s:%(message)s')
 logger = getLogger("accessdata")
 logger.setLevel(DEBUG)
 
