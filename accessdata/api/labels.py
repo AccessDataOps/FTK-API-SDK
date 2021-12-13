@@ -120,3 +120,5 @@ class Labels(AttributeFinderMixin):
 
 		label.update(response.json())
 		self.append(label)
+
+		return label

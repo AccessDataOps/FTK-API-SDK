@@ -7,13 +7,15 @@ class to provide seamless use of AccessData API.
 
 from enum import IntEnum
 from math import ceil
+from time import sleep
 from typing import Any
 
 from .attributes import Attribute
 from .extensions import (evidence_list_ext, evidence_process_ext,
-	evidence_processed_list_ext, object_page_list_ext, export_natives_ext)
+	evidence_processed_list_ext, object_page_list_ext, export_natives_ext,
+	search_report_ext)
 from .filters import and_
-from .jobs import Job
+from .jobs import Job, JobState
 from .objects import Object
 from ..logging import logger
 from ..utilities import AttributeFinderMixin, AttributeMappedDict
@@ -244,7 +246,7 @@ class Evidence(AttributeFinderMixin):
 		total_pages = ceil(total_objects / pagesize)
 		while pagenumber <= total_pages:
 			response = self.client.send_request(request_type,
-			ext.format(caseid=caseid, pagenumber=pagenumber, pagesize=pagesize),
+				ext.format(caseid=caseid, pagenumber=pagenumber, pagesize=pagesize),
 				json={
 					"columns": columns,
 					"filter": filter
@@ -254,6 +256,77 @@ class Evidence(AttributeFinderMixin):
 			yield from map(
 				lambda obj: Object(self._case, **obj),
 				objects["entities"]
+			)
+			pagenumber += 1
+
+	def search_keyword(self, keywords, filter: dict = {}, attributes: list = [], **kwargs):
+		"""Runs a keyword search against the case evidence and iterates
+		through the objects that flag against the keywords. Filters can be specified
+		to reduce the content searched and attribute lists can be specified
+		to get relevant information.
+
+		:param keywords: The list of keywords to search for.
+		:type keywords: list[string]
+
+		:param filter: The filter to apply before iterating.
+		:type filter: dict, optional
+
+		:param attributes: The attributes to retrieve about the objects.
+		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+
+		:return: A list of Objects.
+		:rtype: list[:class:`~accessdata.api.objects.Object`]
+		"""
+		caselabels = self._case.labels
+		caseid = self._case.get("id", 0)
+
+		labels = list()
+		for keyword in keywords:
+			label = caselabels.first_matching_attribute("name", keyword) or caselabels.create(name=keyword)
+			labels.append(label)
+		labelids = list(map(lambda x: x.id, labels))
+
+		searchdata = {
+			"name": "API-Search " + '-'.join(keywords),
+			"assignlabel": True,
+			"fulltextsearchonly": True,
+			"criteria": {
+				"terms": keywords,
+				"searchParameters": kwargs
+			},
+			"searchterms": [
+				{
+					"label": keyword,
+					"term": keyword
+				} for keyword in keywords
+			]
+		}
+
+		request_type, ext = search_report_ext
+		response = self.client.send_request(request_type,
+			ext.format(caseid=caseid), json=searchdata
+		)
+
+		job = Job(self._case, id=response.json())
+		while job.state in (JobState.Submitted, JobState.InProgress):
+			sleep(1)
+			job.update()
+		if job.state in (JobState.Failed, JobState.CompletedWithErrors):
+			return []
+
+		labelid = self.client.attributes.first_matching_attribute(
+			"attributeUniqueName",
+			"LabelID"
+		)
+		if filter:
+			yield from self.iterate(
+				filter=and_(labelid.within(labelids), filter),
+				attributes=attributes
+			)
+		else:
+			yield from self.iterate(
+				filter=labelid.within(labelids),
+				attributes=attributes
 			)
 
 	def export_natives(self, path: str, filter: dict = {}, **kwargs):
@@ -271,7 +344,20 @@ class Evidence(AttributeFinderMixin):
 		:return: The job created.
 		:rtype: :class:`~accessdata.api.jobs.Job`
 		"""
-		return _export_natives(self._case, path, filter, **kwargs)
+		caseid = self._case.get("id", 0)
+		request_type, ext = export_natives_ext
+		response = case.client.send_request(request_type,
+			ext.format(caseid=caseid),
+			json={
+				"checkprocessedobjectflag": False,
+				"insertdata": False,
+				"insertexternaldataonly": False,
+				"runparser": False,
+				"inputfolder": path,
+				"uiFilter": filter
+			} | kwargs
+		)
+		return Job(case, id=response.json())
 
 class ProcessedEvidence(Evidence):
 
@@ -286,21 +372,3 @@ class ProcessedEvidence(Evidence):
 		evidenceobjects = map(lambda x: EvidenceObject(self._case, **x),
 			response.json())
 		self.extend(evidenceobjects)
-
-##
-
-def _export_natives(case, path: str, filter: dict = {}, **kwargs):
-	caseid = case.get("id", 0)
-	request_type, ext = export_natives_ext
-	response = case.client.send_request(request_type,
-		ext.format(caseid=caseid),
-		json={
-			"checkprocessedobjectflag": False,
-			"insertdata": False,
-			"insertexternaldataonly": False,
-			"runparser": False,
-			"inputfolder": path,
-			"uiFilter": filter
-		} | kwargs
-	)
-	return Job(case, id=response.json())
