@@ -94,7 +94,7 @@ class Client:
 		return request_func(self.session, self.url + extension, *args, **kwargs)
 
 	@property
-	def attributes(self) -> list:
+	def attributes(self) -> Attributes:
 		"""Maintains all attributes (columns) that can be used for filtering and viewing.
 
 		:getter: A list of :class:`~accessdata.rest.attributes.Attribute` objects.

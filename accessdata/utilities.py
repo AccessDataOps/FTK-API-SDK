@@ -33,7 +33,7 @@ from .logging import logger
 ## Declaring __all__
 
 __all__ = ("AttributeFinderMixin", "AttributeMappedDict",
-	"delete", "get", "patch", "post", "put", )
+	"delete", "get", "patch", "post", "put", "HttpNegotiateAuth", )
 
 ##
 
@@ -164,6 +164,10 @@ class AttributeFinderMixin(list):
 ## https://github.com/brandond/requests-negotiate-sspi
 
 class HttpNegotiateAuth(AuthBase):
+    """Creates a Authentication state to override module `requests`
+    functionality providing NTLM/Negotiate authentication when
+    sending HTTP requests.
+    """
     _auth_info = None
     _service = 'HTTP'
     _host = None

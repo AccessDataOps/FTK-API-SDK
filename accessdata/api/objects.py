@@ -16,6 +16,10 @@ __all__ = ("Object", )
 ## Object construction
 
 class Object(AttributeMappedDict):
+	"""Maintains information about a entry within the case. To
+	access any attributes, perform a __getitem__ call to the
+	attribute name.
+	"""
 	def __init__(self, case, **kwargs):
 		super().__init__()
 		self._case = case
