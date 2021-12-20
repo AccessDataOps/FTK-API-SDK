@@ -11,6 +11,7 @@ __all__ = (
 	"site_server_status_check_ext",
 	"case_create_ext",
 	"case_list_ext",
+	"case_create_portable_ext",
 	"evidence_list_ext",
 	"evidence_processed_list_ext",
 	"evidence_process_ext",
@@ -58,6 +59,7 @@ site_server_status_check_ext 	= GET, base_ext + "/agent/getsiteserverstatus"
 
 case_create_ext					= POST, base_ext + "/core/createcase"
 case_list_ext					= GET, base_ext + "/core/getcaselist"
+case_create_portable_ext		= POST, base_ext + "/core/{caseid}/createportablecase"
 
 ## Evidence Management Extensions
 

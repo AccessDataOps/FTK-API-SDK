@@ -5,7 +5,7 @@ The Case management system to handle all case information and sub-components.
 """
 
 from os.path import join
-from typing import Any
+from typing import Any, Optional
 
 from .evidence import Evidence, ProcessedEvidence
 from .extensions import case_create_ext, case_list_ext, server_setting_ext
@@ -117,6 +117,40 @@ class Case(AttributeMappedDict):
 		response = self.client.send_request(request_type, ext)
 		case = next(x for x in response.json() if x["id"] == self["id"])
 		super().update(case)
+
+	def export_portable_version(self, directory: str,
+		include_ftkplus: Optional[bool] = True, filter=: dict = None,
+		foldername: str = None):
+		"""Exports a portable version of the case to the target directory
+		using the filter provided. Optional arguments include whether to
+		export FTK Plus with the new case folder or not.
+		
+		:param directory: The directory to export too.
+		:type directory: string
+
+		:param include_ftkplus: Should export FTK+ to the directory?
+		:type include_ftkplus: bool, optional
+
+		:param filter: The filter to apply before exporting.
+		:type filter: dict, optional
+
+		:param foldername: The name of the parent folder.
+		:type foldername: string
+		"""
+
+		request_type, ext = case_create_portable_ext
+		response = self.client.send_request(request_type,
+			ext.format(caseid=self.id),
+			json={
+				"uifilter": filter or {},
+				"copyqview": include_ftkplus,
+				"outputpath": directory,
+				"foldername": foldername or f"Portable {self.name}"
+			}
+		)
+		jobid = response.json()
+		job = Job(self.case, id=jobid)
+		return job
 
 ## Cases class construction
 
