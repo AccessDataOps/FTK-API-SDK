@@ -82,6 +82,13 @@ class Job(AttributeMappedDict):
 		"""
 		return self["state"]
 
+	def __repr__(self):
+		"""Return a string representation of the job.
+
+		:rtype: string
+		"""
+		return f"Job<caseid={self._case.id}, id={self.id}, state={str(self.state)}>"
+
 ## Jobs class construction
 
 class Jobs(AttributeFinderMixin):
