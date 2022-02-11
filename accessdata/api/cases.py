@@ -119,7 +119,7 @@ class Case(AttributeMappedDict):
 		super().update(case)
 
 	def export_portable_version(self, directory: str,
-		include_ftkplus: Optional[bool] = True, filter=: dict = None,
+		include_ftkplus: Optional[bool] = True, filter: dict = None,
 		foldername: str = None):
 		"""Exports a portable version of the case to the target directory
 		using the filter provided. Optional arguments include whether to
