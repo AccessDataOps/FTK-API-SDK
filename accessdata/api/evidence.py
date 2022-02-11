@@ -344,20 +344,25 @@ class Evidence(AttributeFinderMixin):
 		:return: The job created.
 		:rtype: :class:`~accessdata.api.jobs.Job`
 		"""
-		caseid = self._case.get("id", 0)
-		request_type, ext = export_natives_ext
-		response = case.client.send_request(request_type,
-			ext.format(caseid=caseid),
-			json={
-				"checkprocessedobjectflag": False,
-				"insertdata": False,
-				"insertexternaldataonly": False,
-				"runparser": False,
-				"inputfolder": path,
-				"uiFilter": filter
-			} | kwargs
-		)
-		return Job(case, id=response.json())
+		return _export_natives(self._case, path, filter, **kwargs)
+
+
+def _export_natives(case, path, *args, **kwargs):
+	caseid = case.get("id", 0)
+	request_type, ext = export_natives_ext
+	response = case.client.send_request(request_type,
+		ext.format(caseid=caseid),
+		json={
+			"checkprocessedobjectflag": False,
+			"insertdata": False,
+			"insertexternaldataonly": False,
+			"runparser": False,
+			"inputfolder": path,
+			"uiFilter": filter
+		} | kwargs
+	)
+	return Job(case, id=response.json())
+
 
 class ProcessedEvidence(Evidence):
 
