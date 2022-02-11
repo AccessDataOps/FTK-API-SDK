@@ -347,7 +347,7 @@ class Evidence(AttributeFinderMixin):
 		return _export_natives(self._case, path, filter, **kwargs)
 
 
-def _export_natives(case, path, *args, **kwargs):
+def _export_natives(case, path, filter, *args, **kwargs):
 	caseid = case.get("id", 0)
 	request_type, ext = export_natives_ext
 	response = case.client.send_request(request_type,
