@@ -1,5 +1,9 @@
 # API-SDK
 
+Requirements:
+ 
+**Python 3.9+**
+
 To install:
 
 _ONLINE_
