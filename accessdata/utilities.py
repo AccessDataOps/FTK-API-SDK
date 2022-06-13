@@ -15,8 +15,7 @@ try:
 	import sspicon
 	import win32security
 except:
-	print("Failed to import SSPI auth modules. " \
-        "SDK will not provide LDAP authentication.")
+	pass
 
 from requests import Session, Response
 from requests.auth import AuthBase
