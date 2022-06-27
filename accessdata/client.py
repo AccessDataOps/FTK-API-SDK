@@ -61,7 +61,7 @@ class Client:
 	def __init__(self, url: str, apikey: Union[str, None], validate: bool=True, *args, **kwargs):
 		self.url = url
 
-		self.session = Session(*args, **kwargs)
+		self.session = Session()
 
 		if apikey:
 			# self.session.headers = {"EnterpriseApiKey": apikey}
