@@ -1,3 +1,43 @@
+from .extensions import trigger_workflow_ext
+
 class FTKConnect():
-    def __init__(self):
-        pass
+    def __init__(self,client):
+        self.client = client
+
+    def parse_args(self,**args):
+        workflow_details={}
+
+        workflow_id = args["workflowid"]
+        # Process in existing case ids
+        if "caseids" in args:
+            workflow_details["createCase"]={"CaseIds":args['caseids'].split(",") }
+        # Process in new case
+        elif "caseids"not in args and "casename"in args:
+            workflow_details={ "createCase": {"CaseName":args['casename']}}
+        # Raise runtime exception neither caseid nor casename is received.
+        elif 'caseids'not in args and 'casename' not in args:
+            raise ValueError("Both caseid and casename are empty")
+
+        if 'evidencepath'in args:
+            workflow_details['AddEvidence']={'EvidencePath':args['evidencepath']}
+        if 'searchandtagpath' in args:
+            workflow_details['SearchAndTag']={"FileLocations":args['searchandtagpath']}
+        if 'exportpath' in args:
+            workflow_details['Export']={"ExportPath":args['exportpath']}
+        if 'targetips' in args:
+            agent_ips  = [ip.strip() for ip in args['targetips'].split(",")]
+            workflow_details['Collection']={"targetips":agent_ips}
+
+        return workflow_id, workflow_details
+
+    def trigger(self,**args):
+
+        workflow_id, workflow_params = self.parse_args(**args)
+        request_type, ext = trigger_workflow_ext
+        ext = ext.format(workflowid=workflow_id)
+        response = self.client.send_request(request_type, ext, json=workflow_params)
+        status_flag = response.json()
+        result = {"Status":"true",
+                  "Result": status_flag
+                 }
+        return result

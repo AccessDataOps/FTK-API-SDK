@@ -6,12 +6,13 @@ between the client python environment and the API
 service.
 """
 
+from .api.ftkconnect import FTKConnect
 from requests import Session, Response
 from typing import Union
 
 from .api.attributes import Attributes
 from .api.cases import Cases
-from .api.extensions import status_check_ext
+from .api.extensions import status_check_ext, login_ext
 from .logging import logger
 from . import utilities
 
@@ -63,7 +64,10 @@ class Client:
 		self.session = Session(*args, **kwargs)
 
 		if apikey:
-			self.session.headers = {"EnterpriseApiKey": apikey}
+			# self.session.headers = {"EnterpriseApiKey": apikey}
+			data = {"Username":kwargs["username"],"Password":kwargs["password"]}
+			request_type, ext = login_ext
+			response = self.send_request(request_type,ext,data=data)
 
 		if validate:
 			request_type, ext = status_check_ext
@@ -73,6 +77,7 @@ class Client:
 
 		self._attributes = None
 		self._cases = None
+		self._connect = None
 		self._fields = None
 		self._users = None
 
@@ -128,3 +133,13 @@ class Client:
 		if not self._users:
 			self._attributes = Users(self)
 		return self._users
+
+	@property
+	def connect(self):
+		"""
+
+		"""
+
+		if not self._connect:
+			self._connect = FTKConnect(self)
+		return self._connect
