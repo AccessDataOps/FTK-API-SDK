@@ -68,13 +68,15 @@ class Client:
 			data = {"Username":kwargs["username"],"Password":kwargs["password"]}
 			request_type, ext = login_ext
 			response = self.send_request(request_type,ext,data=data)
-
+			self.session.status_code = response.status_code
+		
 		if validate:
 			request_type, ext = status_check_ext
 			response = self.send_request(request_type, ext)
 			if response.json() != "Ok":
 				raise ConnectionError("AccessData API responded with bad 'status'.")
-
+			self.session.status_code = response.status_code
+		# print(url,ext)
 		self._attributes = None
 		self._cases = None
 		self._connect = None
@@ -136,8 +138,9 @@ class Client:
 
 	@property
 	def connect(self):
-		"""
+		"""Sends API call to FTK connect to trigger the automation workflow.
 
+		:type: : class: FTKConnect 
 		"""
 
 		if not self._connect:
