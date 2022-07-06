@@ -12,7 +12,7 @@ from typing import Union
 
 from .api.attributes import Attributes
 from .api.cases import Cases
-from .api.extensions import status_check_ext, login_ext
+from .api.extensions import status_check_ext
 from .logging import logger
 from . import utilities
 
@@ -64,11 +64,7 @@ class Client:
 		self.session = Session()
 
 		if apikey:
-			# self.session.headers = {"EnterpriseApiKey": apikey}
-			data = {"Username":kwargs["username"],"Password":kwargs["password"]}
-			request_type, ext = login_ext
-			response = self.send_request(request_type,ext,data=data)
-			self.session.status_code = response.status_code
+			self.session.headers = {"EnterpriseApiKey": apikey}
 		
 		if validate:
 			request_type, ext = status_check_ext

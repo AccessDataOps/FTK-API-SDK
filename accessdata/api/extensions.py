@@ -114,5 +114,4 @@ yara_ioc_rule_import_ext		= POST, base_ext + "/agent/importiocandyara"
 
 ## FTK Connect Extensions
 
-login_ext						= POST, "/RequestLogin"
-trigger_workflow_ext 			= POST, "/api/workflow/triggerworkflow/{workflowid}"
+trigger_workflow_ext 			= POST, base_ext + "/workflow/triggerworkflow/{workflowid}"
