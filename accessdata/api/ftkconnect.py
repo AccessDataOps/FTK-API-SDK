@@ -31,8 +31,8 @@ class FTKConnect():
         elif "caseids" not in args and "casename" in args:
             workflow_details={ "createCase": {"CaseName":args['casename']}}
         # Raise runtime exception neither caseid nor casename is received.
-        elif 'caseids'not in args and 'casename' not in args:
-            raise ValueError("Both caseid and casename are empty")
+        # elif 'caseids'not in args and 'casename' not in args:
+        #     raise ValueError("Both caseid and casename are empty")
 
         if 'evidencepath'in args:
             workflow_details['AddEvidence']={'EvidencePath':args['evidencepath']}
