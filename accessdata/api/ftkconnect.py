@@ -23,7 +23,7 @@ class FTKConnect():
         """
         workflow_details={}
 
-        workflow_id = args["workflowid"]
+        workflow_id = args["automationid"]
         # Process in existing case ids
         if "caseids" in args:
             workflow_details["createCase"]={"CaseIds":args['caseids'].split(",") }
