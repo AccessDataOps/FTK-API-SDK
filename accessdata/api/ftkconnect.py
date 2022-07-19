@@ -37,7 +37,7 @@ class FTKConnect():
         if 'evidencepath'in args:
             workflow_details['AddEvidence']={'EvidencePath':args['evidencepath']}
         if 'searchandtagpath' in args:
-            workflow_details['SearchAndTag']={"FileLocations":args['searchandtagpath']}
+            workflow_details['SearchAndTag']={"FolderLocation":[args['searchandtagpath']]}
         if 'exportpath' in args:
             workflow_details['Export']={"ExportPath":args['exportpath']}
         if 'targetips' in args:
