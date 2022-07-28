@@ -40,9 +40,10 @@ class FTKConnect():
             workflow_details['SearchAndTag']={"FolderLocation":[args['searchandtagpath']]}
         if 'exportpath' in args:
             workflow_details['Export']={"ExportPath":args['exportpath']}
+        agent_ips = []
         if 'targetips' in args:
             agent_ips  = [ip.strip() for ip in args['targetips'].split(",")]
-            workflow_details['Collection']={"targetips":agent_ips}
+        workflow_details['Collection']={"targetips":agent_ips}
 
         return workflow_id, workflow_details
 
