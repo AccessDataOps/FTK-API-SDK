@@ -23,26 +23,26 @@ class FTKConnect():
         """
         workflow_details={}
 
-        workflow_id = args["automationid"]
+        workflow_id = args["Automation ID"]
         # Process in existing case ids
-        if "caseids" in args:
-            workflow_details["createCase"]={"CaseIds":args['caseids'].split(",") }
+        if "Case IDs" in args:
+            workflow_details["createCase"]={"CaseIds":args['Case IDs'].split(",") }
         # Process in new case
-        elif "caseids" not in args and "casename" in args:
-            workflow_details={ "createCase": {"CaseName":args['casename']}}
+        elif "Case IDs" not in args and "Case Name" in args:
+            workflow_details={ "createCase": {"CaseName":args['Case Name']}}
         # Raise runtime exception neither caseid nor casename is received.
         # elif 'caseids'not in args and 'casename' not in args:
         #     raise ValueError("Both caseid and casename are empty")
 
-        if 'evidencepath'in args:
-            workflow_details['AddEvidence']={'EvidencePath':args['evidencepath']}
-        if 'searchandtagpath' in args:
-            workflow_details['SearchAndTag']={"FolderLocation":[args['searchandtagpath']]}
-        if 'exportpath' in args:
-            workflow_details['Export']={"ExportPath":args['exportpath']}
+        if 'Evidence Path'in args:
+            workflow_details['AddEvidence']={'EvidencePath':args['Evidence Path']}
+        if 'SearchandTag Path' in args:
+            workflow_details['SearchAndTag']={"FolderLocation":[args['SearchandTag Path']]}
+        if 'Export Path' in args:
+            workflow_details['Export']={"ExportPath":args['Export Path']}
         agent_ips = []
-        if 'targetips' in args:
-            agent_ips  = [ip.strip() for ip in args['targetips'].split(",")]
+        if 'Target IPs' in args:
+            agent_ips  = [ip.strip() for ip in args['Target IPs'].split(",")]
         workflow_details['Collection']={"targetips":agent_ips}
 
         return workflow_id, workflow_details
