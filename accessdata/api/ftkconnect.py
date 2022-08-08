@@ -61,7 +61,6 @@ class FTKConnect():
         ext = ext.format(workflowid=workflow_id)
         response = self.client.send_request(request_type, ext, json=workflow_params)
         status_flag = response.json()
-        result = {"Status":"true",
-                  "Result": status_flag
+        result = {"Status":status_flag
                  }
         return result
