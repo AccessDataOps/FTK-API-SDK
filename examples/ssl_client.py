@@ -1,7 +1,5 @@
 from accessdata.client import Client
 
-## Only required if anon auth is disallowed.
-client = Client("https://localhost:4443/", None, validate=False)
-client.session.cert = "/path/to/cert"
+client = Client("https://<subjectname>/", verify="/path/to/ca-cert.cer")
 
 print(client.cases)
