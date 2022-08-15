@@ -7,7 +7,7 @@ service.
 """
 
 from requests import Session, Response
-from typing import Union
+from typing import Any, Union
 
 from .api.attributes import Attributes
 from .api.cases import Cases
@@ -25,8 +25,7 @@ class Client:
 	"""Instantiates the URL and Authentication against the API
 	service. All extra arguments are passed to the session creator.
 
-	By default the constructor will try to validate the API service's status.
-	Supply `validate=False` as a keyword argument to stop this behaviour.
+	The constructor will try to validate the API service's status.
 
 	:param url: The base url the API service is listening upon.
 	:type url: string
@@ -34,8 +33,14 @@ class Client:
 	:param apikey: The API key to use to authenticate against the API service.
 	:type apikey: string
 
-	:param validate: Should the client check the service status upon construct? Default: True
-	:type validate: bool, optional
+	:param auth: The auth method to be overriden on the session.
+	:type auth: Any, optional
+
+	:param cert: The cert attribute to be overriden on the session.
+	:type cert: str/tuple, optional
+
+	:param verify: The verify attribute to be overriden on the session.
+	:type verify: str, optional
 
 	Making a HTTP Client:
 
@@ -51,13 +56,14 @@ class Client:
 
 		from accessdata.client import Client
 
-		client = Client("https://localhost:4443/", "api-key-guid", validate=False)
-		client.session.cert = "/path/to/cert/file"
+		client = Client("https://localhost:4443/", "api-key-guid", verify="/path/to/cert/file")
 	"""
 
 	__request_types = ("delete", "get", "patch", "post", "put")
 
-	def __init__(self, url: str, apikey: Union[str, None], validate: bool=True, *args, **kwargs):
+	def __init__(self, url: str, apikey: Union[str, None]=None, auth: Any=None,
+			cert: Union[str, tuple, None]=None, verify: Union[str, None]=None,
+			*args, **kwargs):
 		self.url = url
 
 		self.session = Session(*args, **kwargs)
@@ -65,11 +71,19 @@ class Client:
 		if apikey:
 			self.session.headers = {"EnterpriseApiKey": apikey}
 
-		if validate:
-			request_type, ext = status_check_ext
-			response = self.send_request(request_type, ext)
-			if response.json() != "Ok":
-				raise ConnectionError("AccessData API responded with bad 'status'.")
+		if auth:
+			self.session.auth = auth
+
+		if cert:
+			self.session.cert = cert
+
+		if verify:
+			self.session.verify = verify
+
+		request_type, ext = status_check_ext
+		response = self.send_request(request_type, ext)
+		if response.json() != "Ok":
+			raise ConnectionError("FTK API service responded with bad 'status'.")
 
 		self._attributes = None
 		self._cases = None
