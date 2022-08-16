@@ -20,18 +20,18 @@ VERSION = "0.8.0"
 
 if __name__ == "__main__":
 	setup(
-		name="accessdata-sdk",
+		name="exterro-ftk-sdk",
 		version=VERSION,
-		description="Python Library for AccessData's API",
+		description="Python Library for FTK API",
 		author="Thomas Vieth",
 		author_email="thomas.vieth@exterro.com",
 		url="https://github.com/AccessDataOps/FTK-API-SDK",
 		packages=[
-			"accessdata",
-			"accessdata.api"
+			"exterro",
+			"exterro.api"
 		],
 		install_requires=reqs,
 		setup_requites=reqs,
-		package_dir={"accessdata": "accessdata"},
+		package_dir={"exterro": "exterro"},
 		include_package_data=True
 	)

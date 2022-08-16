@@ -5,7 +5,7 @@ client = Client("http://localhost:4443/", "api-key-guid")
 attributes = client.attributes
 cases = client.cases
 
-object_name = attributes..first_matching_attribute("attributeUniqueName", "ObjectName")
+object_name = attributes.first_matching_attribute("attributeUniqueName", "ObjectName")
 
 case = cases.first_matching_attribute("name", "Test Case")
 
