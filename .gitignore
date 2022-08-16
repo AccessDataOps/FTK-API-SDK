@@ -3,6 +3,7 @@
 *.zip
 
 /exterro_ftk_sdk.egg-info/*
+/exterro_ftk_sdk.egg-info/top_level.txt
 /build/*
 /documentation/*
 /dist/*
