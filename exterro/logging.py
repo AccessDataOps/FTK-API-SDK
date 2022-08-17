@@ -17,12 +17,12 @@ __all__ = ("logger", "set_logging_level", )
 
 if platform == "win32":
 	USER_NAME = getlogin()
-	LOG_PATH = r"C:\ProgramData\AccessData\SDK\accessdata-sdk.log"
+	LOG_PATH = r"C:\Users\Public\Public Documents\AccessDataLogs\exterro-ftk-sdk.log"
 else:
 	from os import getuid
 	from pwd import getpwuid
 	USER_NAME = getpwuid(getuid()).pw_name
-	LOG_PATH = r"/var/log/accessdata-sdk.log"
+	LOG_PATH = r"/var/log/exterro-ftk-sdk.log"
 
 ##
 
@@ -31,7 +31,7 @@ logfile.parent.mkdir(parents=True, exist_ok=True)
 logfile.touch(exist_ok=True)
 
 basicConfig(filename=logfile, format=USER_NAME + ' - %(asctime)s - %(levelname)s:%(message)s')
-logger = getLogger("accessdata")
+logger = getLogger("exterro")
 logger.setLevel(DEBUG)
 
 def set_logging_level(level):
