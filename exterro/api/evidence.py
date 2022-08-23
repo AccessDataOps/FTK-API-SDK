@@ -259,7 +259,7 @@ class Evidence(AttributeFinderMixin):
 			)
 			pagenumber += 1
 
-	def search_keyword(self, keywords, filter: dict = {}, attributes: list = [], **kwargs):
+	def search_keywords(self, keywords, filter: dict = {}, attributes: list = [], labels: Union[list, None]=None, **kwargs):
 		"""Runs a keyword search against the case evidence and iterates
 		through the objects that flag against the keywords. Filters can be specified
 		to reduce the content searched and attribute lists can be specified
@@ -274,17 +274,26 @@ class Evidence(AttributeFinderMixin):
 		:param attributes: The attributes to retrieve about the objects.
 		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
 
+		:param labels: The list of labels to apply to the objects.
+		:type labels: list[string], optional
+
 		:return: A list of Objects.
 		:rtype: list[:class:`~accessdata.api.objects.Object`]
 		"""
 		caselabels = self._case.labels
 		caseid = self._case.get("id", 0)
 
-		labels = list()
-		for keyword in keywords:
-			label = caselabels.first_matching_attribute("name", keyword) or caselabels.create(name=keyword)
-			labels.append(label)
-		labelids = list(map(lambda x: x.id, labels))
+		if labels:
+			labels_len = len(labels)
+			if labels_len != len(keywords):
+				raise ValueError("Keywords and Labels list must be of same length.")
+		else:
+			labels = list(map(lambda x: "API-Search " + x, keywords))
+
+		labelids = []
+		for label in labels:
+			label = caselabels.first_matching_attribute("name", label) or caselabels.create(name=label)
+			labelids.append(label.id)
 
 		searchdata = {
 			"name": "API-Search " + '-'.join(keywords),
@@ -296,9 +305,9 @@ class Evidence(AttributeFinderMixin):
 			},
 			"searchterms": [
 				{
-					"label": keyword,
-					"term": keyword
-				} for keyword in keywords
+					"label": labels[i],
+					"term": keywords[i]
+				} for i in range(0, labels_len)
 			]
 		}
 
