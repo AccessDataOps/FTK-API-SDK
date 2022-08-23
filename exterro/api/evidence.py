@@ -73,11 +73,12 @@ class EvidenceObject(AttributeMappedDict):
 		:rtype: :class:`~accessdata.api.jobs.Job`
 		"""
 		evidence_id = Attribute.by_name("EvidenceID")
-		if filter == {}:
+		if filter:
 			return _export_natives(self._case, path,
-				filter=evidence_id == self.get("evidenceId", 0), *args, **kwargs)
-		return _export_natives(self._case, path,
 				filter=and_(filter, evidence_id == self.get("evidenceId", 0)), *args, **kwargs)
+		return _export_natives(self._case, path,
+			filter=evidence_id == self.get("evidenceId", 0), *args, **kwargs)
+		
 
 	@classmethod
 	def process_and_create(cls, case, evidencepath: str,
