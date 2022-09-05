@@ -26,7 +26,7 @@ class FTKConnect():
         workflow_id = args["automation_id"]
         # Process in existing case ids
         if "case_ids" in args:
-            workflow_details["createCase"]={"CaseIds":argToList(args['case_ids']) }
+            workflow_details["createCase"]={"CaseIds": args['case_ids'] }
         # Process in new case
         elif "case_ids" not in args and "case_name" in args:
             workflow_details={ "createCase": {"CaseName":args['case_name']}}
@@ -42,7 +42,7 @@ class FTKConnect():
             workflow_details['Export']={"ExportPath":args['export_path']}
         agent_ips = []
         if 'target_ips' in args:
-            agent_ips  = argToList(args['target_ips'])
+            agent_ips  = args['target_ips']
         workflow_details['Collection']={"targetips":agent_ips}
 
         return workflow_id, workflow_details
