@@ -23,26 +23,26 @@ class FTKConnect():
         """
         workflow_details={}
 
-        workflow_id = args["Automation ID"]
+        workflow_id = args["automation_id"]
         # Process in existing case ids
-        if "Case IDs" in args:
-            workflow_details["createCase"]={"CaseIds":args['Case IDs'].split(",") }
+        if "case_ids" in args:
+            workflow_details["createCase"]={"CaseIds":args['case_ids'].split(",") }
         # Process in new case
-        elif "Case IDs" not in args and "Case Name" in args:
-            workflow_details={ "createCase": {"CaseName":args['Case Name']}}
+        elif "case_ids" not in args and "case_name" in args:
+            workflow_details={ "createCase": {"CaseName":args['case_name']}}
         # Raise runtime exception neither caseid nor casename is received.
         # elif 'caseids'not in args and 'casename' not in args:
         #     raise ValueError("Both caseid and casename are empty")
 
-        if 'Evidence Path'in args:
-            workflow_details['AddEvidence']={'EvidencePath':args['Evidence Path']}
-        if 'SearchandTag Path' in args:
-            workflow_details['SearchAndTag']={"FolderLocation":[args['SearchandTag Path']]}
-        if 'Export Path' in args:
-            workflow_details['Export']={"ExportPath":args['Export Path']}
+        if 'evidence_path'in args:
+            workflow_details['AddEvidence']={'EvidencePath':args['evidence_path']}
+        if 'search_tag_path' in args:
+            workflow_details['SearchAndTag']={"FolderLocation":[args['search_tag_path']]}
+        if 'export_path' in args:
+            workflow_details['Export']={"ExportPath":args['export_path']}
         agent_ips = []
-        if 'Target IPs' in args:
-            agent_ips  = [ip.strip() for ip in args['Target IPs'].split(",")]
+        if 'target_ips' in args:
+            agent_ips  = [ip.strip() for ip in args['target_ips'].split(",")]
         workflow_details['Collection']={"targetips":agent_ips}
 
         return workflow_id, workflow_details
