@@ -1,5 +1,4 @@
 from .extensions import trigger_workflow_ext
-from CommonServerPython import *
 
 class FTKConnect():
 
