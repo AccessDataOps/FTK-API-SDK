@@ -8,7 +8,7 @@ class to provide seamless use of AccessData API.
 from enum import IntEnum
 from math import ceil
 from time import sleep
-from typing import Any
+from typing import Any, Union
 
 from .attributes import Attribute
 from .extensions import (evidence_list_ext, evidence_process_ext,
