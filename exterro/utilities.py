@@ -125,10 +125,10 @@ def put(session: Session, url: str, *args, **kwargs) -> Response:
 
 class AttributeMappedDict(dict):
 
-	def __getattr__(self, attr):
+	def __getattribute__(self, attr):
 		if super().__contains__(attr):
 			return self[attr]
-		return super().__getattr__(attr)
+		return super().__getattribute__(attr)
 
 class AttributeFinderMixin(list):
 	"""Subclass of list that provides functions to search the list of objects
