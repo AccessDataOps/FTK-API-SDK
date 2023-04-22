@@ -68,7 +68,7 @@ class Case(AttributeMappedDict):
 	def __repr__(self):
 		name = self.get('name', None)
 		id = self.get('id', 0)
-		return f"Case<{name=}, {id=}>"
+		return f"Case<name={name}, id={id}>"
 
 	@property
 	def evidence(self):

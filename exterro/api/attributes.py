@@ -65,7 +65,7 @@ class Attribute(AttributeMappedDict):
 	## Overrides
 
 	def __repr__(self):
-		return f"Attribute<{self.name=}, {self.id=}>"
+		return f"Attribute<name={self.name}, id={self.id}>"
 
 	## Comparators
 

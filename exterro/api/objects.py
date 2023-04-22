@@ -29,7 +29,7 @@ class Object(AttributeMappedDict):
 		
 	def __repr__(self):
 		id = self.get('id', 0)
-		return f"Object<{id=}>"
+		return f"Object<id={id}>"
 
 	def __getitem__(self, item):
 		if not super().__contains__(item):

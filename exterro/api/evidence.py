@@ -53,7 +53,7 @@ class EvidenceObject(AttributeMappedDict):
 	def __repr__(self):
 		path = self.get('filePath', None)
 		id = self.get('evidenceId', 0)
-		return f"EvidenceObject<{path=}, {id=}>"
+		return f"EvidenceObject<path={path}, id={id}>"
 
 	def export_natives(self, path: str, filter: dict = {}, *args, **kwargs):
 		"""Exports objects from the evidence to the supplied path. The exported
