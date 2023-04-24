@@ -105,7 +105,10 @@ class Client:
 		if not request_type in self.__request_types:
 			raise AttributeError(f"Client.send_request cannot access '{request_type}'.")
 		request_func = getattr(utilities, request_type)
-		return request_func(self.session, self.url + extension, *args, **kwargs)
+		response = request_func(self.session, self.url + extension, *args, **kwargs)
+		if response.headers["content-type"] == "text/html":
+			raise RuntimeError("Permission denied.")
+		return response
 
 	@property
 	def attributes(self) -> Attributes:
