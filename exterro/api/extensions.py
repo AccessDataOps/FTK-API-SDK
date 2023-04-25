@@ -91,7 +91,7 @@ export_natives_ext				= POST, base_ext + "/jobs/{caseid}/dumpnativeobjects"
 ## Agent Management Extensions
 
 agent_push_ext					= POST, base_ext + "/agent/{caseid}/runagentpush"
-agent_collection_ext			= POST, base_ext + "/agent/{caseid}/collectiononagent"
+agent_collection_ext			= POST, base_ext + "/agent/{caseid}/agentcollectionjob"
 agent_disk_acquisition_ext		= POST, base_ext + "/agent/{caseid}/diskacquistion"
 agent_memory_acquisition_ext	= POST, base_ext + "/agent/{caseid}/memoryacquistion"
 agent_remediation_ext			= POST, base_ext + "/agent/{caseid}/remediate"

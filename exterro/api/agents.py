@@ -328,7 +328,7 @@ def _collect_on_agent(case, targets: list[str], name: str, **kwargs):
     response = case.client.send_request(request_type,
         ext.format(caseid=caseid),
         json={
-            "collectionOnAgent": {
+            "agentCollection": {
                 "filter": kwargs,
                 "baseName": name,
                 "calculateSha1Hashes": True,
