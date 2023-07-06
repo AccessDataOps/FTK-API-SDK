@@ -139,14 +139,14 @@ class AttributeFinderMixin(list):
 		"""Locates the first Attribute that matches the attribute provided.
 		If no Attribute if found, None is returned."""
 		try:
-			return next(obj for obj in self if obj.__getattr__(attribute) == value)
+			return next(obj for obj in self if obj.__getattribute__(attribute) == value)
 		except StopIteration:
 			return None
 
 	def all_matching_attribute(self, attribute: str, value: Any):
 		"""Locates all Attribute instances that match the attribute provided."""
 		try:
-			return [obj for obj in self if obj.__getattr__(attribute) == value]
+			return [obj for obj in self if obj.__getattribute__(attribute) == value]
 		except StopIteration:
 			return []
 			
@@ -155,7 +155,7 @@ class AttributeFinderMixin(list):
 		Yielding each value and returning None upon failure."""
 		try:
 			for obj in self:
-				if obj.__getattr__(attribute) == value:
+				if obj.__getattribute__(attribute) == value:
 					yield obj
 		except StopIteration:
 			yield None
