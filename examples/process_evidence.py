@@ -1,6 +1,6 @@
-from accessdata.api.evidence import EvidenceType
-from accessdata.api.jobs import JobState
-from accessdata.client import Client
+from exterro.api.evidence import EvidenceType
+from exterro.api.jobs import JobState
+from exterro.client import Client
 
 from time import sleep
 

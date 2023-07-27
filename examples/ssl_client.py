@@ -1,4 +1,4 @@
-from accessdata.client import Client
+from exterro.client import Client
 
 client = Client("https://<subjectname>/", verify="/path/to/ca-cert.cer")
 

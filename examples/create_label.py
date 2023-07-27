@@ -1,4 +1,4 @@
-from accessdata.client import Client
+from exterro.client import Client
 
 client = Client("http://localhost:4443/", "api-key-guid")
 
