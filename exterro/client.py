@@ -106,7 +106,7 @@ class Client:
 			raise AttributeError(f"Client.send_request cannot access '{request_type}'.")
 		request_func = getattr(utilities, request_type)
 		response = request_func(self.session, self.url + extension, *args, **kwargs)
-		if response.headers["content-type"] == "text/html":
+		if "Content-Type" in response.headers and response.headers["Content-Type"] == "text/html":
 			raise RuntimeError("Permission denied.")
 		return response
 
