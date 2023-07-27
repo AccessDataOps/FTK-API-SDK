@@ -6,7 +6,7 @@ class to provide seamless use of AccessData API.
 """
 
 from enum import IntEnum
-from math import ceil
+from math import ceil, floor
 from time import sleep
 from typing import Any, Union
 
@@ -102,9 +102,9 @@ class EvidenceObject(AttributeMappedDict):
 		"""
 		evidence_id = Attribute.by_name("EvidenceID")
 		if filter:
-			yield from _iterate(self._case, pagesize,
+			return _iterate(self._case, pagesize,
 				and_(filter, evidence_id == self.get("evidenceId", 0)), attributes)
-		yield from _iterate(self._case, pagesize,
+		return _iterate(self._case, pagesize,
 			evidence_id == self.get("evidenceId", 0), attributes)
 
 
@@ -131,9 +131,9 @@ class EvidenceObject(AttributeMappedDict):
 		"""
 		evidence_id = Attribute.by_name("EvidenceID")
 		if filter:
-			yield from _search_keywords(self._case, keywords,
+			return _search_keywords(self._case, keywords,
 				and_(filter, evidence_id == self.get("evidenceId", 0)), attributes, labels, **kwargs)
-		yield from _search_keywords(self._case, keywords,
+		return _search_keywords(self._case, keywords,
 				evidence_id == self.get("evidenceId", 0), attributes, labels, **kwargs)
 
 
@@ -292,7 +292,7 @@ class Evidence(AttributeFinderMixin):
 		:return: A list of Objects.
 		:rtype: list[:class:`~accessdata.api.objects.Object`]
 		"""
-		yield from _iterate(self._case, pagesize, filter, attributes)
+		return _iterate(self._case, pagesize, filter, attributes)
 
 	def search_keywords(self, keywords, filter: dict = {}, attributes: list = [], labels: Union[list, None]=None, **kwargs):
 		"""Runs a keyword search against the case evidence and iterates
@@ -315,7 +315,7 @@ class Evidence(AttributeFinderMixin):
 		:return: A list of Objects.
 		:rtype: list[:class:`~accessdata.api.objects.Object`]
 		"""
-		yield from _search_keywords(self._case, keywords, filter, attributes, labels, **kwargs)
+		return _search_keywords(self._case, keywords, filter, attributes, labels, **kwargs)
 
 	def export_natives(self, path: str, filter: dict = {}, **kwargs):
 		"""Exports objects from the evidence to the supplied path. The exported
@@ -393,7 +393,7 @@ def _iterate(case, pagesize=100, filter: dict = {}, attributes: list = []):
 	)
 
 	total_objects = int(objects["totalCount"])
-	total_pages = ceil(total_objects / pagesize)
+	total_pages = floor(total_objects / pagesize)
 	while pagenumber <= total_pages:
 		response = case.client.send_request(request_type,
 			ext.format(caseid=caseid, pagenumber=pagenumber, pagesize=pagesize),
