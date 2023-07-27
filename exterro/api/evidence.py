@@ -367,7 +367,7 @@ def _browse(case, pagenumber: int, pagesize: int, filter: dict = {},
 	)
 	return list(
 		map(
-			lambda obj: Object(self._case, **obj),
+			lambda obj: Object(case, **obj),
 			response.json()["entities"]
 		)
 	)
@@ -388,7 +388,7 @@ def _iterate(case, pagesize=100, filter: dict = {}, attributes: list = []):
 	)
 	objects = response.json()
 	yield from map(
-		lambda obj: Object(self._case, **obj),
+		lambda obj: Object(case, **obj),
 		objects["entities"]
 	)
 
@@ -404,7 +404,7 @@ def _iterate(case, pagesize=100, filter: dict = {}, attributes: list = []):
 		)
 		objects = response.json()
 		yield from map(
-			lambda obj: Object(self._case, **obj),
+			lambda obj: Object(case, **obj),
 			objects["entities"]
 		)
 		pagenumber += 1
@@ -447,7 +447,7 @@ def _search_keywords(case, keywords, filter: dict = {}, attributes: list = [], l
 		ext.format(caseid=caseid), json=searchdata
 	)
 
-	job = Job(self._case, id=response.json())
+	job = Job(case, id=response.json())
 	while job.state in (JobState.Submitted, JobState.InProgress):
 		sleep(1)
 		job.update()
