@@ -16,6 +16,7 @@ __all__ = (
 	"evidence_processed_list_ext",
 	"evidence_process_ext",
 	"object_page_list_ext",
+	"object_get_content_ext",
 	"label_create_ext"
 	"label_list_ext"
 	"label_objects_job_ext"
@@ -70,6 +71,7 @@ evidence_process_ext 			= POST, base_ext + "/core/{caseid}/processdata"
 ## Object Management Extensions
 
 object_page_list_ext			= POST, base_ext + "/core/{caseid}/getobjectlist/{pagenumber}/{pagesize}"
+object_get_content_ext			= GET, base_ext + "/core/cases/{caseid}/evidenceObjectText/{objectid}"
 
 ## Label Management Extensions
 

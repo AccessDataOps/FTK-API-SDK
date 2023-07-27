@@ -6,6 +6,7 @@
 
 from typing import Any
 
+from .extensions import object_get_content_ext
 from ..logging import logger
 from ..utilities import AttributeMappedDict
 
@@ -51,3 +52,12 @@ class Object(AttributeMappedDict):
 			if label:
 				labels += (label, )
 		return labels
+
+	@property
+	def content(self):
+		request_type, ext = object_get_content_ext
+		response = self._case.client.send_request(request_type,
+			ext.format(caseid=self._case.id, objectid=self.get('id', 0))
+		)
+		return response.text
+	
