@@ -55,6 +55,88 @@ class EvidenceObject(AttributeMappedDict):
 		id = self.get('evidenceId', 0)
 		return f"EvidenceObject<{path=}, {id=}>"
 
+	def browse(self, pagenumber: int, pagesize: int, filter: dict = {},
+			attributes: list = []):
+		"""Browses through objects in the evidence items in a paged system,
+		similar to a catalog. The objects to browse can be reduced using a filter
+		before reading the page information. Alongside this, to view specific
+		attributes of these objects, supply the attributes within the attributes
+		iterable parameter.
+
+		:param pagenumber: The number of the page to view.
+		:type pagenumber: int
+
+		:param pagesize: The amount of objects to return in the page.
+		:type pagesize: int
+
+		:param filter: The filter to apply before paging.
+		:type filter: dict, optional
+
+		:param attributes: The attributes to retrieve about the objects.
+		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+		"""
+		evidence_id = Attribute.by_name("EvidenceID")
+		if filter:
+			return _browse(self._case, pagenumber, pagesize,
+				and_(filter, evidence_id == self.get("evidenceId", 0)), attributes)
+		return _browse(self._case, pagenumber, pagesize,
+			evidence_id == self.get("evidenceId", 0), attributes)
+
+	def iterate(self, pagesize=100, filter: dict = {}, attributes: list = []):
+		"""Iterates through all objects in the evidence items in a paged system.
+		The objects to iterate through can be reduced using a filter. Alongside
+		this, to view specific attributes of these objects, supply the
+		attributes within the attributes iterable parameter.
+
+		:param pagesize: The amount of objects to return in a single page.
+		:type pagesize: int, optional
+
+		:param filter: The filter to apply before iterating.
+		:type filter: dict, optional
+
+		:param attributes: The attributes to retrieve about the objects.
+		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+
+		:return: A list of Objects.
+		:rtype: list[:class:`~accessdata.api.objects.Object`]
+		"""
+		evidence_id = Attribute.by_name("EvidenceID")
+		if filter:
+			yield from _iterate(self._case, pagesize,
+				and_(filter, evidence_id == self.get("evidenceId", 0)), attributes)
+		yield from _iterate(self._case, pagesize,
+			evidence_id == self.get("evidenceId", 0), attributes)
+
+
+	def search_keywords(self, keywords, filter: dict = {}, attributes: list = [], labels: Union[list, None]=None, **kwargs):
+		"""Runs a keyword search against the case evidence and iterates
+		through the objects that flag against the keywords. Filters can be specified
+		to reduce the content searched and attribute lists can be specified
+		to get relevant information.
+
+		:param keywords: The list of keywords to search for.
+		:type keywords: list[string]
+
+		:param filter: The filter to apply before iterating.
+		:type filter: dict, optional
+
+		:param attributes: The attributes to retrieve about the objects.
+		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+
+		:param labels: The list of labels to apply to the objects.
+		:type labels: list[string], optional
+
+		:return: A list of Objects.
+		:rtype: list[:class:`~accessdata.api.objects.Object`]
+		"""
+		evidence_id = Attribute.by_name("EvidenceID")
+		if filter:
+			yield from _search_keywords(self._case, keywords,
+				and_(filter, evidence_id == self.get("evidenceId", 0)), attributes, labels, **kwargs)
+		yield from _search_keywords(self._case, keywords,
+				evidence_id == self.get("evidenceId", 0), attributes, labels, **kwargs)
+
+
 	def export_natives(self, path: str, filter: dict = {}, *args, **kwargs):
 		"""Exports objects from the evidence to the supplied path. The exported
 		objects can be reduced by supplying a filter. By default the export
@@ -190,22 +272,7 @@ class Evidence(AttributeFinderMixin):
 		:param attributes: The attributes to retrieve about the objects.
 		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
 		"""
-		caseid = self._case.get("id", 0)
-		columns = list(map(lambda attr: {"attribute": attr}, attributes))
-		request_type, ext = object_page_list_ext
-		response = self.client.send_request(request_type,
-			ext.format(caseid=caseid, pagenumber=pagenumber, pagesize=pagesize),
-			json={
-				"columns": columns,
-				"filter": filter
-			}
-		)
-		return list(
-			map(
-				lambda obj: Object(self._case, **obj),
-				response.json()["entities"]
-			)
-		)
+		return _browse(self._case, pagenumber, pagesize, filter, attributes)
 
 	def iterate(self, pagesize=100, filter: dict = {}, attributes: list = []):
 		"""Iterates through all objects in the evidence items in a paged system.
@@ -225,40 +292,7 @@ class Evidence(AttributeFinderMixin):
 		:return: A list of Objects.
 		:rtype: list[:class:`~accessdata.api.objects.Object`]
 		"""
-		caseid = self._case.get("id", 0)
-		columns = list(map(lambda attr: {"attribute": attr}, attributes))
-
-		pagenumber = 1
-		request_type, ext = object_page_list_ext
-		response = self.client.send_request(request_type,
-			ext.format(caseid=caseid, pagenumber=pagenumber, pagesize=pagesize),
-			json={
-				"columns": columns,
-				"filter": filter
-			}
-		)
-		objects = response.json()
-		yield from map(
-			lambda obj: Object(self._case, **obj),
-			objects["entities"]
-		)
-
-		total_objects = int(objects["totalCount"])
-		total_pages = ceil(total_objects / pagesize)
-		while pagenumber <= total_pages:
-			response = self.client.send_request(request_type,
-				ext.format(caseid=caseid, pagenumber=pagenumber, pagesize=pagesize),
-				json={
-					"columns": columns,
-					"filter": filter
-				}
-			)
-			objects = response.json()
-			yield from map(
-				lambda obj: Object(self._case, **obj),
-				objects["entities"]
-			)
-			pagenumber += 1
+		yield from _iterate(self._case, pagesize, filter, attributes)
 
 	def search_keywords(self, keywords, filter: dict = {}, attributes: list = [], labels: Union[list, None]=None, **kwargs):
 		"""Runs a keyword search against the case evidence and iterates
@@ -281,63 +315,7 @@ class Evidence(AttributeFinderMixin):
 		:return: A list of Objects.
 		:rtype: list[:class:`~accessdata.api.objects.Object`]
 		"""
-		caselabels = self._case.labels
-		caseid = self._case.get("id", 0)
-
-		if labels:
-			labels_len = len(labels)
-			if labels_len != len(keywords):
-				raise ValueError("Keywords and Labels list must be of same length.")
-		else:
-			labels = list(map(lambda x: "API-Search " + x, keywords))
-
-		labelids = []
-		for label in labels:
-			label = caselabels.first_matching_attribute("name", label) or caselabels.create(name=label)
-			labelids.append(label.id)
-
-		searchdata = {
-			"name": "API-Search " + '-'.join(keywords),
-			"assignlabel": True,
-			"fulltextsearchonly": True,
-			"criteria": {
-				"terms": keywords,
-				"searchParameters": kwargs
-			},
-			"searchterms": [
-				{
-					"label": labels[i],
-					"term": keywords[i]
-				} for i in range(0, len(labels))
-			]
-		}
-
-		request_type, ext = search_report_ext
-		response = self.client.send_request(request_type,
-			ext.format(caseid=caseid), json=searchdata
-		)
-
-		job = Job(self._case, id=response.json())
-		while job.state in (JobState.Submitted, JobState.InProgress):
-			sleep(1)
-			job.update()
-		if job.state in (JobState.Failed, JobState.CompletedWithErrors):
-			return []
-
-		labelid = self.client.attributes.first_matching_attribute(
-			"attributeUniqueName",
-			"LabelID"
-		)
-		if filter:
-			yield from self.iterate(
-				filter=and_(labelid.within(labelids), filter),
-				attributes=attributes
-			)
-		else:
-			yield from self.iterate(
-				filter=labelid.within(labelids),
-				attributes=attributes
-			)
+		yield from _search_keywords(self._case, keywords, filter, attributes, labels, **kwargs)
 
 	def export_natives(self, path: str, filter: dict = {}, **kwargs):
 		"""Exports objects from the evidence to the supplied path. The exported
@@ -355,6 +333,143 @@ class Evidence(AttributeFinderMixin):
 		:rtype: :class:`~accessdata.api.jobs.Job`
 		"""
 		return _export_natives(self._case, path, filter, **kwargs)
+
+
+def _browse(case, pagenumber: int, pagesize: int, filter: dict = {},
+		attributes: list = []):
+	"""Browses through objects in the evidence items in a paged system,
+	similar to a catalog. The objects to browse can be reduced using a filter
+	before reading the page information. Alongside this, to view specific
+	attributes of these objects, supply the attributes within the attributes
+	iterable parameter.
+
+	:param pagenumber: The number of the page to view.
+	:type pagenumber: int
+
+	:param pagesize: The amount of objects to return in the page.
+	:type pagesize: int
+
+	:param filter: The filter to apply before paging.
+	:type filter: dict, optional
+
+	:param attributes: The attributes to retrieve about the objects.
+	:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+	"""
+	caseid = case.get("id", 0)
+	columns = list(map(lambda attr: {"attribute": attr}, attributes))
+	request_type, ext = object_page_list_ext
+	response = case.client.send_request(request_type,
+		ext.format(caseid=caseid, pagenumber=pagenumber, pagesize=pagesize),
+		json={
+			"columns": columns,
+			"filter": filter
+		}
+	)
+	return list(
+		map(
+			lambda obj: Object(self._case, **obj),
+			response.json()["entities"]
+		)
+	)
+
+
+def _iterate(case, pagesize=100, filter: dict = {}, attributes: list = []):
+	caseid = case.get("id", 0)
+	columns = list(map(lambda attr: {"attribute": attr}, attributes))
+
+	pagenumber = 1
+	request_type, ext = object_page_list_ext
+	response = case.client.send_request(request_type,
+		ext.format(caseid=caseid, pagenumber=pagenumber, pagesize=pagesize),
+		json={
+			"columns": columns,
+			"filter": filter
+		}
+	)
+	objects = response.json()
+	yield from map(
+		lambda obj: Object(self._case, **obj),
+		objects["entities"]
+	)
+
+	total_objects = int(objects["totalCount"])
+	total_pages = ceil(total_objects / pagesize)
+	while pagenumber <= total_pages:
+		response = case.client.send_request(request_type,
+			ext.format(caseid=caseid, pagenumber=pagenumber, pagesize=pagesize),
+			json={
+				"columns": columns,
+				"filter": filter
+			}
+		)
+		objects = response.json()
+		yield from map(
+			lambda obj: Object(self._case, **obj),
+			objects["entities"]
+		)
+		pagenumber += 1
+
+
+def _search_keywords(case, keywords, filter: dict = {}, attributes: list = [], labels: Union[list, None]=None, **kwargs):
+	caselabels = case.labels
+	caseid = case.get("id", 0)
+
+	if labels:
+		labels_len = len(labels)
+		if labels_len != len(keywords):
+			raise ValueError("Keywords and Labels list must be of same length.")
+	else:
+		labels = list(map(lambda x: "API-Search " + x, keywords))
+
+	labelids = []
+	for label in labels:
+		label = caselabels.first_matching_attribute("name", label) or caselabels.create(name=label)
+		labelids.append(label.id)
+
+	searchdata = {
+		"name": "API-Search " + '-'.join(keywords),
+		"assignlabel": True,
+		"fulltextsearchonly": True,
+		"criteria": {
+			"terms": keywords,
+			"searchParameters": kwargs
+		},
+		"searchterms": [
+			{
+				"label": labels[i],
+				"term": keywords[i]
+			} for i in range(0, len(labels))
+		]
+	}
+
+	request_type, ext = search_report_ext
+	response = case.client.send_request(request_type,
+		ext.format(caseid=caseid), json=searchdata
+	)
+
+	job = Job(self._case, id=response.json())
+	while job.state in (JobState.Submitted, JobState.InProgress):
+		sleep(1)
+		job.update()
+	if job.state in (JobState.Failed, JobState.CompletedWithErrors):
+		return []
+
+	labelid = case.client.attributes.first_matching_attribute(
+		"attributeUniqueName",
+		"LabelID"
+	)
+	if filter:
+		yield from _iterate(
+			case,
+			filter=and_(labelid.within(labelids), filter),
+			attributes=attributes
+		)
+	else:
+		yield from _iterate(
+			case,
+			filter=labelid.within(labelids),
+			attributes=attributes
+		)
 
 
 def _export_natives(case, path, filter, *args, **kwargs):

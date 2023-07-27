@@ -14,7 +14,7 @@ reqs = [line.strip('\n') for line in open(requirements_path, "r").readlines()]
 
 ##
 
-VERSION = "1.0.1"
+VERSION = "1.1.0"
 
 ##
 
