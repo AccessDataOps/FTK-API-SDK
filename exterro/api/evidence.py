@@ -394,7 +394,8 @@ def _iterate(case, pagesize=100, filter: dict = {}, attributes: list = []):
 
 	total_objects = int(objects["totalCount"])
 	total_pages = floor(total_objects / pagesize)
-	while pagenumber <= total_pages:
+	while pagenumber < total_pages:
+		pagenumber += 1
 		response = case.client.send_request(request_type,
 			ext.format(caseid=caseid, pagenumber=pagenumber, pagesize=pagesize),
 			json={
@@ -407,7 +408,6 @@ def _iterate(case, pagesize=100, filter: dict = {}, attributes: list = []):
 			lambda obj: Object(case, **obj),
 			objects["entities"]
 		)
-		pagenumber += 1
 
 
 def _search_keywords(case, keywords, filter: dict = {}, attributes: list = [], labels: Union[list, None]=None, **kwargs):
