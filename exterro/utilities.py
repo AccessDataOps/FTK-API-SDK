@@ -268,7 +268,7 @@ class HttpNegotiateAuth(AuthBase):
             request.headers['Authorization'] = '{} {}'.format(scheme, base64.b64encode(auth[0].Buffer).decode('ASCII'))
             logger.debug('Sending Initial Context Token - error={} authenticated={}'.format(error, clientauth.authenticated))
         except pywintypes.error as e:
-            logger.debug('Error calling {}: {}'.format(e[1], e[2]), exc_info=e)
+            logger.error('Error calling {}: {}'.format(e[1], e[2]), exc_info=e)
             return response
 
         # A streaming response breaks authentication.
@@ -329,7 +329,7 @@ class HttpNegotiateAuth(AuthBase):
             request.headers['Authorization'] = '{} {}'.format(scheme, base64.b64encode(auth[0].Buffer).decode('ASCII'))
             logger.debug('Sending Response - error={} authenticated={}'.format(error, clientauth.authenticated))
         except pywintypes.error as e:
-            logger.debug('Error calling {}: {}'.format(e[1], e[2]), exc_info=e)
+            logger.error('Error calling {}: {}'.format(e[1], e[2]), exc_info=e)
             return response
 
         response3 = response2.connection.send(request, **args)
