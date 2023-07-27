@@ -112,7 +112,8 @@ class EvidenceObject(AttributeMappedDict):
 		"""Runs a keyword search against the case evidence and iterates
 		through the objects that flag against the keywords. Filters can be specified
 		to reduce the content searched and attribute lists can be specified
-		to get relevant information.
+		to get relevant information. This function will await for the search job to
+		complete.
 
 		:param keywords: The list of keywords to search for.
 		:type keywords: list[string]
@@ -298,7 +299,8 @@ class Evidence(AttributeFinderMixin):
 		"""Runs a keyword search against the case evidence and iterates
 		through the objects that flag against the keywords. Filters can be specified
 		to reduce the content searched and attribute lists can be specified
-		to get relevant information.
+		to get relevant information. This function will await for the search job to
+		complete.
 
 		:param keywords: The list of keywords to search for.
 		:type keywords: list[string]
