@@ -308,7 +308,7 @@ class Evidence(AttributeFinderMixin):
 				{
 					"label": labels[i],
 					"term": keywords[i]
-				} for i in range(0, labels_len)
+				} for i in range(0, len(labels))
 			]
 		}
 
