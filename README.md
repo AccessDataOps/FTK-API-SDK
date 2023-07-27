@@ -4,6 +4,10 @@ Requirements:
  
 **Python 3.9+**
 
+**Requests**
+
+**PyWin32** *for Negotiate Auth support*
+
 To install:
 
 _ONLINE_
