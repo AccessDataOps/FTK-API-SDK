@@ -18,8 +18,10 @@ except:
 	pass
 
 from requests import Session, Response
+from requests.adapters import HTTPAdapter
 from requests.auth import AuthBase
 from requests.exceptions import HTTPError
+from requests.packages.urllib3.util.ssl_ import create_urllib3_context
 from typing import Any
 
 try:
@@ -32,7 +34,28 @@ from .logging import logger
 ## Declaring __all__
 
 __all__ = ("AttributeFinderMixin", "AttributeMappedDict",
-	"delete", "get", "patch", "post", "put", "HttpNegotiateAuth", )
+	"delete", "get", "patch", "post", "put", "HttpNegotiateAuth",
+    "CipherAdapter", )
+
+##
+
+class CipherAdapter(HTTPAdapter):
+    """
+    A TransportAdapter that re-enables 3DES support in Requests.
+    """
+    def __init__(self, ciphers, *args, **kwargs):
+        self.__ciphers = ciphers
+        super(CipherAdapter, self).__init__(*args, **kwargs)
+
+    def init_poolmanager(self, *args, **kwargs):
+        context = create_urllib3_context(ciphers=self.__ciphers)
+        kwargs['ssl_context'] = context
+        return super(CipherAdapter, self).init_poolmanager(*args, **kwargs)
+
+    def proxy_manager_for(self, *args, **kwargs):
+        context = create_urllib3_context(ciphers=self.__ciphers)
+        kwargs['ssl_context'] = context
+        return super(CipherAdapter, self).proxy_manager_for(*args, **kwargs)
 
 ##
 

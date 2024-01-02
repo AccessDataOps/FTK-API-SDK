@@ -63,7 +63,7 @@ class Client:
 
 	def __init__(self, url: str, apikey: Union[str, None]=None, auth: Any=None,
 			cert: Union[str, tuple, None]=None, verify: Union[str, None]=None,
-			*args, **kwargs):
+			ciphers: str="RSA+AES:RSA+AESGCM", *args, **kwargs):
 		self.url = url
 
 		self.session = Session(*args, **kwargs)
@@ -79,6 +79,8 @@ class Client:
 
 		if verify:
 			self.session.verify = verify
+
+		self.session.mount("https://", utilities.CipherAdapter(ciphers))
 
 		request_type, ext = status_check_ext
 		response = self.send_request(request_type, ext)
