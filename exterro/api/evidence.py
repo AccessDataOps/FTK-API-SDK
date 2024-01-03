@@ -251,7 +251,11 @@ class Evidence(AttributeFinderMixin):
 
 		self.append(evidenceobject)
 
-		return list(map(lambda jobid: Job(self._case, id=jobid), jobids))
+		jobs = list(map(lambda jobid: Job(self._case, id=jobid), jobids))
+
+		self._case.jobs.extend(jobs)
+
+		return jobs
 
 	def browse(self, pagenumber: int, pagesize: int, filter: dict = {},
 			attributes: list = []):
@@ -395,7 +399,7 @@ def _iterate(case, pagesize=100, filter: dict = {}, attributes: list = []):
 	)
 
 	total_objects = int(objects["totalCount"])
-	total_pages = floor(total_objects / pagesize)
+	total_pages = floor(total_objects / pagesize) + 1
 	while pagenumber < total_pages:
 		pagenumber += 1
 		response = case.client.send_request(request_type,
