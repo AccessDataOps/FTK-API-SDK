@@ -8,8 +8,9 @@ from os.path import join
 from typing import Any, Optional
 
 from .evidence import Evidence, ProcessedEvidence
-from .extensions import case_create_ext, case_list_ext, server_setting_ext
-from .jobs import Jobs
+from .extensions import (case_create_ext, case_list_ext,
+	server_setting_ext, case_create_portable_ext)
+from .jobs import Jobs, Job
 from .labels import Labels
 from ..logging import logger
 from ..utilities import AttributeFinderMixin, AttributeMappedDict
