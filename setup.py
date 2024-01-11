@@ -31,7 +31,7 @@ if __name__ == "__main__":
 			"exterro.api"
 		],
 		install_requires=reqs,
-		setup_requites=reqs,
+		setup_requires=reqs,
 		package_dir={"exterro": "exterro"},
 		include_package_data=True
 	)
