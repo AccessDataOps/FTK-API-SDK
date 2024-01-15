@@ -195,7 +195,7 @@ class Attribute(AttributeMappedDict):
 		:type value: string
 
 		:return: The attribute found. None if not found.
-		:rtype: :class:`~accessdata.api.attributes.Attribute`
+		:rtype: :class:`~exterro.api.attributes.Attribute`
 		"""
 		return Attributes().first_matching_attribute(
 			"attributeUniqueName", value)
@@ -214,10 +214,10 @@ class Attributes(AttributeFinderMixin, metaclass=Singleton):
 	"""Maintains a list of all attributes available within the platform. This
 	class always returns the same object of attrbitues, known as a Singleton.
 	This class supports lookup functions from
-	:class:`~accessdata.utilities.AttributeFinderMixin`.
+	:class:`~exterro.utilities.AttributeFinderMixin`.
 
 	:param client: The client to send the request too.
-	:type client: :class: ~`accessdata.client.Client`
+	:type client: :class: ~`exterro.client.Client`
 	
 	:param update: Should the object automatically request, updating itself?
 	:type update: bool, optional

@@ -2,7 +2,7 @@
 
 """
 Utility module to aid in creating filter JSON objects for use within the
- AccessData API.
+ Exterro FTK API.
 """
 
 from base64 import b64decode

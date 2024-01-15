@@ -2,7 +2,7 @@
 
 """
 Job classes to hold onto multiple jobs and update job statuses upon request.
- Integrates into the Case class to provide seamless use of AccessData API.
+ Integrates into the Case class to provide seamless use of the Exterro FTK API.
 """
 
 from enum import IntEnum
@@ -48,7 +48,7 @@ class Job(AttributeMappedDict):
 	information about the job, simply call `update`.
 
 	:param case: The parent case.
-	:type case: :class:`~accessdata.api.cases.Case`
+	:type case: :class:`~exterro.api.cases.Case`
 
 	:param id: The id of the job.
 	:type id: int
@@ -78,7 +78,7 @@ class Job(AttributeMappedDict):
 	def state(self):
 		"""Property to get the state of the job.
 
-		:rtype: :class:`~accessdata.api.jobs.JobState`
+		:rtype: :class:`~exterro.api.jobs.JobState`
 		"""
 		return self["state"]
 
@@ -94,10 +94,10 @@ class Job(AttributeMappedDict):
 class Jobs(AttributeFinderMixin):
 	"""Jobs is a subclass of list maintaining all jobs within a case from 
 	this session. This class supports lookup functions from
-	:class:`~accessdata.utilities.AttributeFinderMixin`.
+	:class:`~exterro.utilities.AttributeFinderMixin`.
 
 	:param case: The parent case.
-	:type case: :class:`~accessdata.api.cases.Case`
+	:type case: :class:`~exterro.api.cases.Case`
 	"""
 
 	def __init__(self, case):

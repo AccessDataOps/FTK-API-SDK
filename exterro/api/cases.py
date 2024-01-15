@@ -31,7 +31,7 @@ class Case(AttributeMappedDict):
 	overriden through supplication as parameters.
 
 	:param client: The client to send the request too.
-	:type client: :class: ~`accessdata.client.Client`
+	:type client: :class: ~`exterro.client.Client`
 
 	:param name: The name of the case.
 	:type name: string
@@ -76,7 +76,7 @@ class Case(AttributeMappedDict):
 	def evidence(self):
 		"""Property to target the evidence items within a case.
 
-		:rtype: :class:`~accessdata.api.evidence.Evidence`
+		:rtype: :class:`~exterro.api.evidence.Evidence`
 		"""
 		if not self._evidence:
 			self._evidence = Evidence(self)
@@ -86,7 +86,7 @@ class Case(AttributeMappedDict):
 	def jobs(self):
 		"""Property to target the jobs created this session within a case.
 
-		:rtype: :class:`~accessdata.api.jobs.Jobs`
+		:rtype: :class:`~exterro.api.jobs.Jobs`
 		"""
 		if not self._jobs:
 			self._jobs = Jobs(self)
@@ -96,7 +96,7 @@ class Case(AttributeMappedDict):
 	def labels(self):
 		"""Property to target the labels within a case.
 
-		:rtype: :class:`~accessdata.api.labels.Labels`
+		:rtype: :class:`~exterro.api.labels.Labels`
 		"""
 		if not self._labels:
 			self._labels = Labels(self)
@@ -106,7 +106,7 @@ class Case(AttributeMappedDict):
 	def processed_evidence(self):
 		"""Property to target the processed evidence items within a case.
 
-		:rtype: :class:`~accessdata.api.evidence.ProcessedEvidence`
+		:rtype: :class:`~exterro.api.evidence.ProcessedEvidence`
 		"""
 		if not self._processed_evidence:
 			self._processed_evidence = ProcessedEvidence(self)
@@ -160,7 +160,7 @@ class Case(AttributeMappedDict):
 		:param endpoints: The list of endpoint addresses.
 		:type endpoints: list[string]
 
-		:rtype: :class:`~accessdata.api.agents.Agents`
+		:rtype: :class:`~exterro.api.agents.Agents`
 		"""
 
 		return Agents.from_targets(self, endpoints)
@@ -171,10 +171,10 @@ class Case(AttributeMappedDict):
 class Cases(AttributeFinderMixin):
 	"""A subclass of list that maintains all cases within the platform. This 
 	class supports lookup functions from
-	:class:`~accessdata.utilities.AttributeFinderMixin`.
+	:class:`~exterro.utilities.AttributeFinderMixin`.
 
 	:param client: The client to send the request too.
-	:type client: :class: ~`accessdata.client.Client`
+	:type client: :class: ~`exterro.client.Client`
 	
 	:param update: Should the object automatically request, updating itself?
 	:type update: bool, optional
@@ -200,10 +200,10 @@ class Cases(AttributeFinderMixin):
 		be passed to the request as parameters.
 
 		:param case: The case object to instantiate the new case from.
-		:type case: :class:`~accessdata.api.cases.Case`, optional
+		:type case: :class:`~exterro.api.cases.Case`, optional
 
 		:return: The new case object that was created prior to its creation.
-		:rtype: :class:`~accessdata.api.cases.Case`
+		:rtype: :class:`~exterro.api.cases.Case`
 		"""
 		if kwargs and case:
 			case.update(kwargs)

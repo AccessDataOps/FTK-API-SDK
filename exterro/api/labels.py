@@ -2,8 +2,8 @@
 
 """
 Label management and application endpoints enable usage of tagging evidence
- objects. Integrates into the Case class to provide seamless use of AccessData
- API.
+ objects. Integrates into the Case class to provide seamless use of the Exterro
+ FTK API.
 """
 
 from dataclasses import dataclass
@@ -74,10 +74,10 @@ class Label(AttributeMappedDict):
 class Labels(AttributeFinderMixin):
 	"""Labels is a subclass of list maintaining all labels within a
 	case. This  class supports lookup functions from
-	:class:`~accessdata.utilities.AttributeFinderMixin`.
+	:class:`~exterro.utilities.AttributeFinderMixin`.
 
 	:param case: The parent case.
-	:type case: :class:`~accessdata.api.cases.Case`
+	:type case: :class:`~exterro.api.cases.Case`
 	"""
 
 	def __init__(self, case, update=True):
@@ -104,10 +104,10 @@ class Labels(AttributeFinderMixin):
 		be passed to the request as parameters.
 
 		:param label: The label object to instantiate the new label from.
-		:type label: :class:`~accessdata.api.labels.Label`, optional
+		:type label: :class:`~exterro.api.labels.Label`, optional
 
 		:return: The new label object that was created prior to its creation.
-		:rtype: :class:`~accessdata.api.labels.Label`"""
+		:rtype: :class:`~exterro.api.labels.Label`"""
 		if kwargs and label:
 			label.update(kwargs)
 		elif kwargs:

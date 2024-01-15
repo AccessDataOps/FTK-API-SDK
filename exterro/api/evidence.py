@@ -2,7 +2,7 @@
 
 """
 Evidence management and processing endpoint management. Integrates into the Case
-class to provide seamless use of AccessData API.
+class to provide seamless use of the Exterro FTK API.
 """
 
 from enum import IntEnum
@@ -73,7 +73,7 @@ class EvidenceObject(AttributeMappedDict):
 		:type filter: dict, optional
 
 		:param attributes: The attributes to retrieve about the objects.
-		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+		:type attributes: list[:class:`~exterro.api.attributes.Attribute`], optional
 		"""
 		evidence_id = Attribute.by_name("EvidenceID")
 		if filter:
@@ -95,10 +95,10 @@ class EvidenceObject(AttributeMappedDict):
 		:type filter: dict, optional
 
 		:param attributes: The attributes to retrieve about the objects.
-		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+		:type attributes: list[:class:`~exterro.api.attributes.Attribute`], optional
 
 		:return: A list of Objects.
-		:rtype: list[:class:`~accessdata.api.objects.Object`]
+		:rtype: list[:class:`~exterro.api.objects.Object`]
 		"""
 		evidence_id = Attribute.by_name("EvidenceID")
 		if filter:
@@ -122,13 +122,13 @@ class EvidenceObject(AttributeMappedDict):
 		:type filter: dict, optional
 
 		:param attributes: The attributes to retrieve about the objects.
-		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+		:type attributes: list[:class:`~exterro.api.attributes.Attribute`], optional
 
 		:param labels: The list of labels to apply to the objects.
 		:type labels: list[string], optional
 
 		:return: A list of Objects.
-		:rtype: list[:class:`~accessdata.api.objects.Object`]
+		:rtype: list[:class:`~exterro.api.objects.Object`]
 		"""
 		evidence_id = Attribute.by_name("EvidenceID")
 		if filter:
@@ -153,7 +153,7 @@ class EvidenceObject(AttributeMappedDict):
 		:type filter: dict, optional
 
 		:return: The job created.
-		:rtype: :class:`~accessdata.api.jobs.Job`
+		:rtype: :class:`~exterro.api.jobs.Job`
 		"""
 		evidence_id = Attribute.by_name("EvidenceID")
 		if filter:
@@ -171,16 +171,16 @@ class EvidenceObject(AttributeMappedDict):
 		evidence process API call.
 
 		:param case: The case to process within.
-		:type case: :class:`~accessdata.api.cases.Case`
+		:type case: :class:`~exterro.api.cases.Case`
 
 		:param evidencepath: The path directly to the evidence to handle.
 		:type evidencepath: string
 
 		:param evidencetype: The type of evidence to process.
-		:type evidencetype: :class:`~accessdata.api.evidence.EvidenceType`
+		:type evidencetype: :class:`~exterro.api.evidence.EvidenceType`
 
 		:return: The new evidence object and the jobs created.
-		:rtype: tuple[:class:`~accessdata.api.evidence.EvidenceObject`, list[int]]
+		:rtype: tuple[:class:`~exterro.api.evidence.EvidenceObject`, list[int]]
 		"""
 		process_json = {
 			"evidencetocreate": {
@@ -206,10 +206,10 @@ class Evidence(AttributeFinderMixin):
 	case. The class provides support for processing files/images as well as
 	browsing, iterating, and exporting of objects within processed items. This 
 	class supports lookup functions from
-	:class:`~accessdata.utilities.AttributeFinderMixin`.
+	:class:`~exterro.utilities.AttributeFinderMixin`.
 
 	:param case: The parent case.
-	:type case: :class:`~accessdata.api.cases.Case`
+	:type case: :class:`~exterro.api.cases.Case`
 
 	:param update: Should the object automatically request, updating itself?
 	:type update: bool, optional
@@ -244,7 +244,7 @@ class Evidence(AttributeFinderMixin):
 		:type evidencepath: string
 
 		:param evidencetype: The type of evidence to process.
-		:type evidencetype: :class:`~accessdata.api.evidence.EvidenceType`
+		:type evidencetype: :class:`~exterro.api.evidence.EvidenceType`
 		"""
 		evidenceobject, jobids = EvidenceObject.process_and_create(self._case,
 			evidencepath, evidencetype, **kwargs)
@@ -275,7 +275,7 @@ class Evidence(AttributeFinderMixin):
 		:type filter: dict, optional
 
 		:param attributes: The attributes to retrieve about the objects.
-		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+		:type attributes: list[:class:`~exterro.api.attributes.Attribute`], optional
 		"""
 		return _browse(self._case, pagenumber, pagesize, filter, attributes)
 
@@ -292,10 +292,10 @@ class Evidence(AttributeFinderMixin):
 		:type filter: dict, optional
 
 		:param attributes: The attributes to retrieve about the objects.
-		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+		:type attributes: list[:class:`~exterro.api.attributes.Attribute`], optional
 
 		:return: A list of Objects.
-		:rtype: list[:class:`~accessdata.api.objects.Object`]
+		:rtype: list[:class:`~exterro.api.objects.Object`]
 		"""
 		return _iterate(self._case, pagesize, filter, attributes)
 
@@ -313,13 +313,13 @@ class Evidence(AttributeFinderMixin):
 		:type filter: dict, optional
 
 		:param attributes: The attributes to retrieve about the objects.
-		:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+		:type attributes: list[:class:`~exterro.api.attributes.Attribute`], optional
 
 		:param labels: The list of labels to apply to the objects.
 		:type labels: list[string], optional
 
 		:return: A list of Objects.
-		:rtype: list[:class:`~accessdata.api.objects.Object`]
+		:rtype: list[:class:`~exterro.api.objects.Object`]
 		"""
 		return _search_keywords(self._case, keywords, filter, attributes, labels, **kwargs)
 
@@ -336,7 +336,7 @@ class Evidence(AttributeFinderMixin):
 		:type filter: dict, optional
 
 		:return: The job created.
-		:rtype: :class:`~accessdata.api.jobs.Job`
+		:rtype: :class:`~exterro.api.jobs.Job`
 		"""
 		return _export_natives(self._case, path, filter, **kwargs)
 
@@ -359,7 +359,7 @@ def _browse(case, pagenumber: int, pagesize: int, filter: dict = {},
 	:type filter: dict, optional
 
 	:param attributes: The attributes to retrieve about the objects.
-	:type attributes: list[:class:`~accessdata.api.attributes.Attribute`], optional
+	:type attributes: list[:class:`~exterro.api.attributes.Attribute`], optional
 	"""
 	caseid = case.get("id", 0)
 	columns = list(map(lambda attr: {"attribute": attr}, attributes))

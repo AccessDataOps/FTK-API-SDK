@@ -2,7 +2,7 @@
 
 """
 Agent job management and endpoint management. Integrates into the Case
-class to provide seamless use of AccessData API.
+class to provide seamless use of the Exterro FTK API.
 """
 
 from enum import IntEnum
@@ -43,7 +43,7 @@ class Agent:
     analysis jobs to be carried out upon the targeted endpoint.
 
     :param case: The case object to prepare within.
-    :type case: :class:`~accessdata.api.cases.Case`
+    :type case: :class:`~exterro.api.cases.Case`
 
     :param target: The address/netbios/fqdn of the endpoint.
     :type target: str
@@ -126,10 +126,10 @@ class Agents(AttributeFinderMixin):
     and analysis jobs to be carried out upon the targeted endpoints.
 
     :param case: The case object to prepare within.
-    :type case: :class:`~accessdata.api.cases.Case`
+    :type case: :class:`~exterro.api.cases.Case`
 
     :param agents: A list of Agent objects of the respective targets.
-    :type agents: list[:class:`~accessdata.api.agents.Agent`]
+    :type agents: list[:class:`~exterro.api.agents.Agent`]
     """
 
     def __init__(self, case, agents:list = [], *args, **kwargs):
@@ -145,7 +145,7 @@ class Agents(AttributeFinderMixin):
         rather than supplying a list of `Agent` objects.
 
         :param case: The case object to prepare within.
-        :type case: :class:`~accessdata.api.cases.Case`
+        :type case: :class:`~exterro.api.cases.Case`
 
         :param targets: A list of addresses/netbios names/fqdns of the targets.
         :type targets: list[str]
