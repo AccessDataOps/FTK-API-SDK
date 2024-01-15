@@ -7,6 +7,7 @@ The Case management system to handle all case information and sub-components.
 from os.path import join
 from typing import Any, Optional
 
+from .agents import Agents
 from .evidence import Evidence, ProcessedEvidence
 from .extensions import (case_create_ext, case_list_ext,
 	server_setting_ext, case_create_portable_ext)
@@ -152,6 +153,18 @@ class Case(AttributeMappedDict):
 		jobid = response.json()
 		job = Job(self.case, id=jobid)
 		return job
+
+	def find_endpoints(endpoints: List[str]):
+		"""Construct Agent objects for each of the provided endpoint addresses.
+
+		:param endpoints: The list of endpoint addresses.
+		:type endpoints: list[string]
+
+		:rtype: :class:`~accessdata.api.agents.Agents`
+		"""
+
+		return Agents.from_targets(self, endpoints)
+
 
 ## Cases class construction
 
