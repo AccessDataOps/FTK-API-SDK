@@ -46,7 +46,7 @@ class Client:
 
 	.. code-block:: python
 
-		from accessdata.client import Client
+		from exterro.client import Client
 
 		client = Client("http://localhost:4443/", "api-key-guid")
 	
@@ -54,7 +54,7 @@ class Client:
 
 	.. code-block:: python
 
-		from accessdata.client import Client
+		from exterro.client import Client
 
 		client = Client("https://localhost:4443/", "api-key-guid", verify="/path/to/cert/file")
 	"""
@@ -116,8 +116,8 @@ class Client:
 	def attributes(self) -> Attributes:
 		"""Maintains all attributes (columns) that can be used for filtering and viewing.
 
-		:getter: A list of :class:`~accessdata.rest.attributes.Attribute` objects.
-		:type: list[:class:`~accessdata.rest.attributes.Attribute`]
+		:getter: A list of :class:`~exterro.rest.attributes.Attribute` objects.
+		:type: list[:class:`~exterro.rest.attributes.Attribute`]
 		"""
 		if not self._attributes:
 			self._attributes = Attributes(self)
@@ -127,8 +127,8 @@ class Client:
 	def cases(self) -> Cases:
 		"""Maintains all cases available within the platform.
 
-		:getter: A list of :class:`~accessdata.rest.cases.Case` objects.
-		:type: :class:`~accessdata.rest.cases.Cases`
+		:getter: A list of :class:`~exterro.rest.cases.Case` objects.
+		:type: :class:`~exterro.rest.cases.Cases`
 		"""
 		if not self._cases:
 			## Instantiating Attributes... without it case usage falls apart.
