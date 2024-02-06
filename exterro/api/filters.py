@@ -19,6 +19,7 @@ __all__ = (
 	"NumberOperator",
 	"and_",
 	"or_",
+	"AUDIO",
 	"DOCUMENTS",
 	"DATABASES",
 	"EMAILS",
