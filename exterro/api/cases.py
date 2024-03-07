@@ -154,7 +154,7 @@ class Case(AttributeMappedDict):
 		job = Job(self.case, id=jobid)
 		return job
 
-	def find_endpoints(endpoints: List[str]):
+	def find_endpoints(endpoints: list[str]):
 		"""Construct Agent objects for each of the provided endpoint addresses.
 
 		:param endpoints: The list of endpoint addresses.
