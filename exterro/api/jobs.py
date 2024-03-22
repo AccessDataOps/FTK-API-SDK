@@ -70,7 +70,7 @@ class Job(AttributeMappedDict):
 		response = self.client.send_request(request_type,
 			ext.format(caseid=caseid, jobid=jobid))
 		data = response.json()
-		data["state"] = JobState.__getattr__(data["state"])
+		data["state"] = JobState[data["state"]]
 		data["resultData"] = loads(data["resultData"])
 		super().update(data)
 
