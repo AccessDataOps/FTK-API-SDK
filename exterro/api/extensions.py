@@ -33,6 +33,8 @@ __all__ = (
 	"agent_software_inventory_ext",
 	"agent_volatile_analysis_ext",
 	"agent_volatile_import_ext",
+	"collection_execute_ext",
+	"collection_task_list_ext",
 	"job_status_ext",
 	"attribute_list_ext",
 	"attribute_list_by_case_ext",
@@ -100,10 +102,12 @@ agent_remediation_ext			= POST, base_ext + "/agent/{caseid}/remediate"
 agent_software_inventory_ext	= POST, base_ext + "/agent/{caseid}/softwareinventory"
 agent_volatile_analysis_ext		= POST, base_ext + "/agent/{caseid}/volatile"
 agent_volatile_import_ext		= GET, base_ext + "/agent/{caseid}/importvolatile/{jobid}"
+collection_execute_ext			= POST, base_ext + "/agent/createcollectionjob"
 
 ## Generic Job Extensions
 
 job_status_ext					= GET, base_ext + "/core/{caseid}/getjobstatus/{jobid}"
+collection_task_list_ext		= GET, base_ext + "/agent/getcollectiondetail"
 
 ## Utility Extensions
 

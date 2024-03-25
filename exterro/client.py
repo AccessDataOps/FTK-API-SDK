@@ -11,6 +11,7 @@ from typing import Any, Union
 
 from .api.attributes import Attributes
 from .api.cases import Cases
+from .api.collections import Collections
 from .api.extensions import status_check_ext
 from .logging import logger
 from . import utilities
@@ -89,6 +90,7 @@ class Client:
 
 		self._attributes = None
 		self._cases = None
+		self._collections = None
 		self._fields = None
 		self._users = None
 
@@ -116,8 +118,8 @@ class Client:
 	def attributes(self) -> Attributes:
 		"""Maintains all attributes (columns) that can be used for filtering and viewing.
 
-		:getter: A list of :class:`~exterro.rest.attributes.Attribute` objects.
-		:type: list[:class:`~exterro.rest.attributes.Attribute`]
+		:getter: A list of :class:`~exterro.api.attributes.Attribute` objects.
+		:type: list[:class:`~exterro.api.attributes.Attribute`]
 		"""
 		if not self._attributes:
 			self._attributes = Attributes(self)
@@ -127,8 +129,8 @@ class Client:
 	def cases(self) -> Cases:
 		"""Maintains all cases available within the platform.
 
-		:getter: A list of :class:`~exterro.rest.cases.Case` objects.
-		:type: :class:`~exterro.rest.cases.Cases`
+		:getter: A list of :class:`~exterro.api.cases.Case` objects.
+		:type: :class:`~exterro.api.cases.Cases`
 		"""
 		if not self._cases:
 			## Instantiating Attributes... without it case usage falls apart.
@@ -136,6 +138,17 @@ class Client:
 			self._cases = Cases(self)
 		return self._cases
 	
+	@property
+	def collections(self) -> Collections:
+		"""Maintains all cases available within the platform.
+
+		:getter: A list of :class:`~exterro.api.collections.Collection` objects.
+		:type: :class:`~exterro.api.collections.Collections`
+		"""
+		if not self._collections:
+			self._collections = Collections(self)
+		return self._collections
+
 	@property
 	def users(self) -> list:
 		"""Maintains all users available within the platform.
