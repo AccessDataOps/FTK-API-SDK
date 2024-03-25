@@ -105,7 +105,7 @@ class Collections(AttributeFinderMixin):
 			return None
 		
 		json = {
-			"jobname": name,
+			"jobname": name.replace(' ', '_'),
 			"case": str(caseid),
 			"custodians": custodians,
 			"targets": targets,
