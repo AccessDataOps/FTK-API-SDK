@@ -10,6 +10,7 @@ from enum import IntEnum
 from itertools import groupby
 
 from .extensions import collection_task_list_ext, collection_execute_ext
+from .jobs import Job
 from ..logging import logger
 from ..utilities import AttributeFinderMixin, AttributeMappedDict
 
@@ -113,3 +114,5 @@ class Collections(AttributeFinderMixin):
 
 		request_type, ext = collection_execute_ext
 		resp = self.client.send_request(request_type, ext, json=json)
+
+		return Job(case, id=resp.json())
