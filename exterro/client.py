@@ -12,7 +12,7 @@ from typing import Any, Union
 from .api.attributes import Attributes
 from .api.cases import Cases
 from .api.collections import Collections
-from .api.extensions import status_check_ext
+from .api.extensions import status_check_ext, group_list_ext, user_list_ext
 from .logging import logger
 from . import utilities
 
@@ -92,6 +92,7 @@ class Client:
 		self._cases = None
 		self._collections = None
 		self._fields = None
+		self._groups = None
 		self._users = None
 
 	## Constructing all the functions required to make valid URL requests.
@@ -148,6 +149,31 @@ class Client:
 		if not self._collections:
 			self._collections = Collections(self)
 		return self._collections
+	
+	@property
+	def custom_fields(self) -> list:
+		"""Maintains all custom fields available within the platform.
+
+		:getter: A list of :class:`Field` objects.
+		:type: :class:`Fields`
+		"""
+		raise NotImplementedError("Custom-fields sub-module is Not Implemented yet.")
+		if not self._fields:
+			self._fields = None
+		return self._fields
+	
+	@property
+	def groups(self) -> list:
+		"""Maintains all groups available within the platform.
+
+		:getter: A list of :class:`Group` objects.
+		:type: :class:`Groups`
+		"""
+		if not self._groups:
+			request_type, ext = group_list_ext
+			resp = self.send_request(request_type, ext)
+			self._groups = utilities.AttributeFinderMixin(resp.json())
+		return self._groups
 
 	@property
 	def users(self) -> list:
@@ -156,7 +182,8 @@ class Client:
 		:getter: A list of :class:`User` objects.
 		:type: :class:`Users`
 		"""
-		raise NotImplementedError("Users sub-module is Not Implemented yet.")
 		if not self._users:
-			self._attributes = Users(self)
+			request_type, ext = user_list_ext
+			resp = self.send_request(request_type, ext)
+			self._users = utilities.AttributeFinderMixin(resp.json())
 		return self._users

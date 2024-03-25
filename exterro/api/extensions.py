@@ -17,12 +17,14 @@ __all__ = (
 	"evidence_process_ext",
 	"object_page_list_ext",
 	"object_get_content_ext",
-	"label_create_ext"
-	"label_list_ext"
-	"label_objects_job_ext"
-	"label_objects_list_ext"
-	"label_objects_count_ext"
-	"label_objects_sync_ext"
+	"label_create_ext",
+	"label_list_ext",
+	"label_objects_job_ext",
+	"label_objects_list_ext",
+	"label_objects_count_ext",
+	"label_objects_sync_ext",
+    "group_list_ext",
+    "user_list_ext",
 	"search_report_ext",
 	"export_natives_ext",
 	"agent_push_ext",
@@ -83,6 +85,11 @@ label_objects_job_ext			= POST, base_ext + "/jobs/{caseid}/labelobjects"
 label_objects_list_ext			= GET, base_ext + "/core/cases/{caseid}/label/{labelid}/evidenceobjects"
 label_objects_count_ext			= GET, base_ext + "/core/cases/{caseid}/label/{labelid}/objectscount"
 label_objects_sync_ext			= POST, base_ext + "/{caseid}/labelobjectssync"
+
+## RBAC Management Extensions
+
+group_list_ext					= GET, base_ext + "/core/getgroups"
+user_list_ext					= GET, base_ext + "/core/getusers"
 
 ## Search Extensions
 
