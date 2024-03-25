@@ -6,7 +6,6 @@ Label management and application endpoints enable usage of tagging evidence
  FTK API.
 """
 
-from dataclasses import dataclass
 from typing import Any
 
 from .extensions import (label_list_ext, label_create_ext,
