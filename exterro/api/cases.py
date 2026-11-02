@@ -57,8 +57,18 @@ class Case(AttributeMappedDict):
 		super().update(
 			{
 				"name": name,
+				"description": "Created via API SDK.",
 				"ftkcasefolderpath": ftkcasefolderpath,
-				"responsivefilepath": responsivefilepath
+				"responsivefilepath": responsivefilepath,
+				"evidencepath": [ftkcasefolderpath],
+				"enhancedinternetartifactsanalysis": "false",
+				"generatetimelinedata": "false",
+				"generateentities": "false",
+				"processingoption": "Forensic Processing",
+				"processingmanager": "localhost",
+				"triggertheprocessing": "false",
+				"userids": [],
+				"groupids": []
 			} | kwargs
 		)
 
