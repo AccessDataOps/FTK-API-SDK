@@ -44,6 +44,7 @@ __all__ = (
 	"processing_case_ext",
 	"server_setting_ext",
 	"yara_ioc_rule_import_ext",
+	"trigger_workflow_ext",
 )
 
 ## Predefined Constants
@@ -124,3 +125,7 @@ child_file_categories_ext		= GET, base_ext + "/core/getchildrenfilecategories"
 processing_case_ext				= GET, base_ext + "/processingcaseid"
 server_setting_ext				= GET, base_ext + "/core/getserversetting/{setting}"
 yara_ioc_rule_import_ext		= POST, base_ext + "/agent/importiocandyara"
+
+## Connect Extensions
+
+trigger_workflow_ext 			= POST, base_ext + "/workflow/triggerworkflow/{workflowid}"

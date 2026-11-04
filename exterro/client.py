@@ -11,8 +11,10 @@ from typing import Any, Union
 
 from .api.attributes import Attributes
 from .api.cases import Cases
+from .api.connect import Connect
 from .api.collections import Collections
 from .api.extensions import status_check_ext, group_list_ext, user_list_ext
+from .api.users import User
 from .logging import logger
 from . import utilities
 
@@ -90,6 +92,7 @@ class Client:
 
 		self._attributes = None
 		self._cases = None
+		self._connect = None
 		self._collections = None
 		self._fields = None
 		self._groups = None
@@ -141,7 +144,7 @@ class Client:
 	
 	@property
 	def collections(self) -> Collections:
-		"""Maintains all cases available within the platform.
+		"""Maintains all collections available within the platform.
 
 		:getter: A list of :class:`~exterro.api.collections.Collection` objects.
 		:type: :class:`~exterro.api.collections.Collections`
@@ -149,6 +152,17 @@ class Client:
 		if not self._collections:
 			self._collections = Collections(self)
 		return self._collections
+
+	@property
+	def connect(self) -> Connect:
+		"""Maintains all connect Playbooks available within the platform.
+
+		:getter: A list of :class:`~exterro.api.collections.Connect` objects.
+		:type: :class:`~exterro.api.collections.Connect`
+		"""
+		if not self._connect:
+			self._connect = Connect(self)
+		return self._connect
 	
 	@property
 	def custom_fields(self) -> list:
@@ -185,5 +199,5 @@ class Client:
 		if not self._users:
 			request_type, ext = user_list_ext
 			resp = self.send_request(request_type, ext)
-			self._users = utilities.AttributeFinderMixin(resp.json())
+			self._users = list(map(lambda user: User(**user), resp.json()))
 		return self._users
