@@ -49,10 +49,10 @@ class Case(AttributeMappedDict):
 		self.client = client
 
 		if ftkcasefolderpath == None:
-			ftkcasefolderpath = join(Cases.DIRECTORY, name)
+			ftkcasefolderpath = Cases.DIRECTORY
 
 		if responsivefilepath == None:
-			responsivefilepath = join(Cases.DIRECTORY, name, "Jobs")
+			responsivefilepath = Cases.JOBS_DIRECTORY
 
 		super().update(
 			{
@@ -191,6 +191,7 @@ class Cases(AttributeFinderMixin):
 	"""
 
 	DIRECTORY = ""
+	JOBS_DIRECTORY = ""
 
 	def __init__(self, client, update=True):
 		super().__init__()
@@ -200,6 +201,10 @@ class Cases(AttributeFinderMixin):
 		response = self.client.send_request(request_type,
 			ext.format(setting="FTKDefaultPath"))
 		Cases.DIRECTORY = response.json()
+
+		response = self.client.send_request(request_type,
+			ext.format(setting="DefaultCaseCollectedFilePath"))
+		Cases.JOBS_DIRECTORY = response.json()
 
 		if update:
 			self.update()
